@@ -1,0 +1,3417 @@
+#include <GL/gl.h>
+#include <GL/glut.h>
+#include <math.h>
+#define MAX_DROPS 1000
+
+void bogi(float x,float y,float z);
+void train_tier(float x,float y,float z);
+void train_door(float x,float y,float z);
+void windowline(float a,float b,float c);
+void bridge_blinkinglight();
+void bridge_blinkinglight2();
+void cargo_design(float a , float b , float c);
+void car1wheels(float x,float y , float z);
+
+bool fogOn = false;
+float fogDensity = 0.55f;  // 0.0 = no fog, 1.0 = full white
+float cloud1 = 0.0f;
+float cloud2 = 0.0f;
+float train_pos = 0.0f;
+float train_speed = 7.0f;
+float boatPosition2 = 0.0f;
+float boatSpeed2 = 2.5f;
+float cargoPosition3= 0.0;
+float cargoSpeed3 = -3;
+float car2_move = 0.0f;
+float car2_speed = 6.0f;
+float waveX[4] = {0, 80, 120, 160};
+float waveY[4] = {0, 20, -20, 0};
+float waveMove = 0.0f;
+float birdX[4] = {100, 300, 660, 700};
+float birdY[4] = {840, 780, 830, 800};
+
+//Train
+void Train()
+{
+    glPushMatrix();
+    glTranslatef(train_pos, 0.0f, 0.0f);
+
+    //Train_tier
+    train_tier(0,0,0);
+    train_tier(-100,0,0);
+    train_tier(-200,0,0);
+    train_tier(-300,0,0);
+    train_tier(-400,0,0);
+    train_tier(-500,0,0);
+
+    //Train_Body
+    glBegin(GL_QUADS);
+    glColor3ub(255, 255, 255); // White body
+        glVertex2f(90,540);
+        glVertex2f(600,540);
+        glVertex2f(600,590);
+        glVertex2f(90,590);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(255, 255, 255); // White body polygon
+        glVertex2f(600, 590);
+        glVertex2f(613, 590);
+        glVertex2f(624, 590);
+        glVertex2f(640, 590);
+        glVertex2f(658, 590);
+        glVertex2f(673, 587.5);
+        glVertex2f(684, 584);
+        glVertex2f(694, 579);
+        glVertex2f(701, 575);
+        glVertex2f(707, 571);
+        glVertex2f(713, 566);
+        glVertex2f(718, 560);
+        glVertex2f(721, 557);
+        glVertex2f(722, 555);
+        glVertex2f(723, 553);
+        glVertex2f(723, 552);
+        glVertex2f(723, 550);
+        glVertex2f(723, 549);
+        glVertex2f(722, 547);
+        glVertex2f(720, 546);
+        glVertex2f(718, 544);
+        glVertex2f(716, 543);
+        glVertex2f(713, 542);
+        glVertex2f(711, 541);
+        glVertex2f(707, 540);
+        glVertex2f(703, 540);
+        glVertex2f(700, 540);
+        glVertex2f(697, 539);
+        glVertex2f(694, 539);
+        glVertex2f(691, 539);
+        glVertex2f(687, 539);
+        glVertex2f(682, 539);
+        glVertex2f(660, 539);
+        glVertex2f(631, 539);
+        glVertex2f(600, 540);
+        glVertex2f(600, 590);
+    glEnd();
+
+    //Windows
+    glBegin(GL_QUADS);
+    glColor3ub(30, 30, 30); // Dark gray windows
+        glVertex2f(655, 560);
+        glVertex2f(705, 560);
+        glVertex2f(677, 580);
+        glVertex2f(655, 580);
+
+        glVertex2f(620, 560);
+        glVertex2f(650, 560);
+        glVertex2f(650, 580);
+        glVertex2f(620, 580);
+
+    glColor3ub(0, 128, 0); //Green Design
+        glVertex2f(90, 545);
+        glVertex2f(660, 545);
+        glVertex2f(705, 551);
+        glVertex2f(90, 551);
+
+    glColor3ub(0, 128, 0); //Green Design
+        glVertex2f(90, 552);
+        glVertex2f(705, 552);
+        glVertex2f(660, 556);
+        glVertex2f(90, 556);
+    glEnd();
+
+    bogi(0,0,0);
+    bogi(-105,0,0);
+    bogi(-205,0,0);
+    bogi(-310,0,0);
+    bogi(-410,0,0);
+    bogi(-515,0,0);
+
+    train_door(10,0,0);
+    train_door(-94,0,0);
+    train_door(-194,0,0);
+    train_door(-298,0,0);
+    train_door(-398,0,0);
+
+    glPopMatrix();
+}
+
+//Train_Door
+void train_door(float x,float y , float z)
+{
+    glPushMatrix();
+    glTranslatef(x,y,z);
+
+    glBegin(GL_QUADS);
+    glColor3ub(215, 221, 194);
+        glVertex2f(576, 540);
+        glVertex2f(590, 540);
+        glVertex2f(590, 575);
+        glVertex2f(576, 575);
+
+    glEnd();
+
+    glBegin(GL_LINES);
+    glColor3ub(0,0,0);
+        glVertex2f(576, 540);
+        glVertex2f(576, 575);
+
+        glVertex2f(576, 575);
+        glVertex2f(590, 575);
+
+        glVertex2f(590, 575);
+        glVertex2f(590, 540);
+    glEnd();
+
+   //Train window
+    glBegin(GL_QUADS);
+    glColor3ub(64, 114, 89);
+        glVertex2f(578, 560);
+        glVertex2f(588, 560);
+        glVertex2f(588, 572);
+        glVertex2f(578, 572);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glColor3ub(58, 59, 53);
+        glVertex2f(510, 560);
+        glVertex2f(570, 560);
+        glVertex2f(570, 580);
+        glVertex2f(510, 580);
+    glEnd();
+
+    glPopMatrix();
+}
+
+//Bogi
+void bogi(float x,float y , float z)
+{
+    glPushMatrix();
+    glTranslatef(x,y,z);
+
+    glBegin(GL_QUADS);
+    glColor3ub(99, 101, 100);
+        glVertex2f(605, 540);
+        glVertex2f(610, 540);
+        glVertex2f(610, 590);
+        glVertex2f(605, 590);
+    glEnd();
+    glPopMatrix();
+}
+
+//Traintier
+void train_tier(float x,float y , float z)
+{
+    glPushMatrix();
+    glTranslatef(x,y,z);
+
+    glBegin(GL_POLYGON);
+        for(int i=0;i<200;i++)
+        {
+            glColor3ub(0,0,0);
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=10.13;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+627,y+ 540);
+        }
+
+        for(int i=0;i<200;i++)
+        {
+            glColor3ub(0,0,0);
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=10.13;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+650,y+  540);
+        }
+    glEnd();
+
+    glBegin(GL_POLYGON);
+         for(int i=0;i<200;i++)
+         {
+            glColor3ub(0,0,0);
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=10.13;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+673,y+540);
+         }
+    glEnd();
+    glPopMatrix();
+}
+
+//Train_timer
+void train_update(int value)
+{
+    train_pos += train_speed;
+    if (train_pos > 1900)
+        train_pos = -700;
+
+    glutPostRedisplay();
+    glutTimerFunc(16, train_update, 0);
+}
+
+void Land()
+{
+    glColor3ub(93, 199, 101);
+    glBegin(GL_POLYGON);
+        glVertex2f(0,50);
+        glVertex2f(99.5,136.2);
+        glVertex2f(140.3,181.5);
+        glVertex2f(200,200);
+        glVertex2f(255,195.9);
+        glVertex2f(290.6,263.8);
+        glVertex2f(350.4,327.7);
+        glVertex2f(350,350);
+        glVertex2f(378.4,359);
+        glVertex2f(396.03,385.5);
+        glVertex2f(427.1,398.5);
+        glVertex2f(0,400);
+        glVertex2f(0,50);
+
+    glColor3ub(206, 171, 85);
+        glVertex2f(0,83);
+        glVertex2f(72.5,155.8);
+        glVertex2f(150,200);
+        glVertex2f(210,170);
+        glVertex2f(280,250);
+        glVertex2f(300,300);
+        glVertex2f(300,350);
+        glVertex2f(360,360);
+        glVertex2f(380,380);
+    glEnd();
+}
+
+void drawWave(float moveX, float moveY)
+{
+    glPushMatrix();
+
+    glTranslatef(moveX + waveMove, moveY, 0);
+
+    glColor3ub(220,240,255);
+    glLineWidth(3);
+
+    glBegin(GL_LINE_STRIP);
+
+    int segments = 50;
+
+    for(int i=0; i<=segments; i++)
+    {
+        float t = (float)i / segments;
+        float omt = 1.0f - t;
+
+        // Cubic Bézier formula
+        float x = omt*omt*omt*waveX[0] + 3*t*omt*omt*waveX[1] + 3*t*t*omt*waveX[2] + t*t*t*waveX[3];
+        float y = omt*omt*omt*waveY[0] + 3*t*omt*omt*waveY[1] + 3*t*t*omt*waveY[2] + t*t*t*waveY[3];
+
+        glVertex2f(x, y);
+    }
+
+    glEnd();
+
+    glPopMatrix();
+}
+
+void river()
+{
+    glColor3ub(67, 172, 217);
+    glBegin(GL_QUADS);
+        glVertex2f(820,600);
+        glVertex2f(820,0);
+        glVertex2f(1900,0);
+        glVertex2f(1900,600);
+
+        glVertex2f(820,600);
+        glVertex2f(820,530);
+        glVertex2f(760,560);
+        glVertex2f(740,620);
+
+        glVertex2f(820, 300);
+        glVertex2f(820, 430);
+        glVertex2f(600, 360);
+        glVertex2f(620, 280);
+
+        glVertex2f(800, 0);
+        glVertex2f(820, 0);
+        glVertex2f(820, 280);
+        glVertex2f(800, 280);
+
+        glVertex2f(600, 0);
+        glVertex2f(800, 0);
+        glVertex2f(800, 300);
+        glVertex2f(600, 280);
+
+        glVertex2f(150,0);
+        glVertex2f(600, 0);
+        glVertex2f(800, 360);
+        glVertex2f(450, 350);
+
+        glVertex2f(800, 280);
+        glVertex2f(820, 280);
+        glVertex2f(820, 290);
+        glVertex2f(800, 290);
+
+        drawWave(900,150);
+        drawWave(580,230);
+        drawWave(600,250);
+        drawWave(700,350);
+        drawWave(460,320);
+        drawWave(1000,310);
+
+    glEnd();
+
+}
+
+void updateWave(int value)
+{
+    waveMove += 2.0f;
+
+    if(waveMove > 1200)
+        waveMove = -100;
+
+    glutPostRedisplay();
+    glutTimerFunc(16, updateWave, 0);
+}
+
+void boat27()
+{
+    if(!fogOn)
+{
+
+    glPushMatrix();
+   glTranslatef(boatPosition2, 490, 0.0f);
+
+
+   glColor3f(0.0f, 0.0f, 0.0f);
+
+    //body
+    glBegin(GL_QUADS);
+
+    glColor3f(0.8f, 0.0f, 0.0f);
+    glVertex2f(700,50);
+    glVertex2f(950,50);
+    glVertex2f(947,55);
+    glVertex2f(710,55);
+    glEnd();
+
+     glBegin(GL_QUADS);
+
+    glColor3f(0.38f, 0.38f, 0.38f);
+    glVertex2f(710,55);
+    glVertex2f(947,55);
+    glVertex2f(960,75);
+    glVertex2f(690,75);
+    glEnd();
+
+   // container
+    glBegin(GL_QUADS);
+
+    glColor3f(0.8f, 0.0f, 0.0f);
+    glVertex2f(720,75);
+    glVertex2f(760,75);
+    glVertex2f(760,95);
+    glVertex2f(720,95);
+    glEnd();
+
+    glBegin(GL_QUADS);
+
+    glColor3f(0.0f, 0.4f, 0.8f);
+    glVertex2f(760,75);
+    glVertex2f(800,75);
+    glVertex2f(800,95);
+    glVertex2f(760,95);
+    glEnd();
+
+    glBegin(GL_QUADS);
+
+    glColor3f(1.0f, 0.6f, 0.2f);
+    glVertex2f(800,75);
+    glVertex2f(840,75);
+    glVertex2f(840,95);
+    glVertex2f(800,95);
+    glEnd();
+
+    glBegin(GL_QUADS);
+
+    glColor3f(0.8f, 0.0f, 0.0f);
+    glVertex2f(840,75);
+    glVertex2f(880,75);
+    glVertex2f(880,95);
+    glVertex2f(840,95);
+    glEnd();
+
+
+     glBegin(GL_QUADS);
+
+    glColor3f(0.0f, 0.4f, 0.8f);
+    glVertex2f(735,95);
+    glVertex2f(775,95);
+    glVertex2f(775,115);
+    glVertex2f(735,115);
+    glEnd();
+
+    glBegin(GL_QUADS);
+
+    glColor3f(1.0f, 0.6f, 0.2f);
+    glVertex2f(780,95);
+    glVertex2f(820,95);
+    glVertex2f(820,115);
+    glVertex2f(780,115);
+    glEnd();
+
+    glBegin(GL_QUADS);
+
+    glColor3f(0.8f, 0.0f, 0.0f);
+    glVertex2f(825,95);
+    glVertex2f(865,95);
+    glVertex2f(865,115);
+    glVertex2f(825,115);
+    glEnd();
+
+   //body
+
+    glLineWidth(3);
+    glBegin(GL_LINES);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(710,75);
+    glVertex2f(710,135);
+     glEnd();
+
+     glBegin(GL_LINES);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(704 ,125);
+    glVertex2f(715,125);
+     glEnd();
+
+      glBegin(GL_LINES);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(700,115);
+    glVertex2f(720,115);
+     glEnd();
+
+   glBegin(GL_QUADS);
+
+  glColor3f(0.38f, 0.38f, 0.38f);
+    glVertex2f(690,75);
+    glVertex2f(760,75);
+    glVertex2f(755,85);
+    glVertex2f(685,85);
+    glEnd();
+
+
+    glLineWidth(2);
+    for (int i = 686; i <= 756; i+=10) {
+    glBegin(GL_LINES);
+
+    glColor3f(0.38f, 0.38f, 0.38f);
+    glVertex2f(i,85);
+    glVertex2f(i,90);
+
+    glEnd();
+    }
+    glBegin(GL_LINES);
+
+    glColor3f(0.38f, 0.38f, 0.38f);
+    glVertex2f(685,90);
+    glVertex2f(755,90);
+
+    glEnd();
+
+
+    glBegin(GL_QUADS);
+
+  glColor3f(1.0f, 1.0f, 1.0f);
+    glVertex2f(890,75);
+    glVertex2f(950,75);
+    glVertex2f(945,130);
+    glVertex2f(895,130);
+    glEnd();
+
+     for (int i = 900; i <=935; i+=5) {
+    glBegin(GL_QUADS);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(i,115);
+    glVertex2f(i+4,115);
+    glVertex2f(i+4,120);
+    glVertex2f(i,120);
+    glEnd();
+    }
+
+    for (int i = 900; i <=935; i+=5) {
+    glBegin(GL_QUADS);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(i,105);
+    glVertex2f(i+4,105);
+    glVertex2f(i+4,110);
+    glVertex2f(i,110);
+    glEnd();
+    }
+    for (int i = 900; i <=935; i+=5) {
+    glBegin(GL_QUADS);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(i,95);
+    glVertex2f(i+4,95);
+    glVertex2f(i+4,100);
+    glVertex2f(i,100);
+    glEnd();
+    }
+
+    glBegin(GL_QUADS);
+
+  glColor3f(1.0f, 1.0f, 1.0f);
+    glVertex2f(910,130);
+    glVertex2f(930,130);
+    glVertex2f(927,140);
+    glVertex2f(913,140);
+    glEnd();
+
+    glLineWidth(3);
+    glBegin(GL_LINES);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(920,140);
+    glVertex2f(920,170);
+     glEnd();
+
+     glBegin(GL_LINES);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(914 ,165);
+    glVertex2f(925,165);
+     glEnd();
+
+      glBegin(GL_LINES);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(910,155);
+    glVertex2f(930,155);
+     glEnd();
+
+   glBegin(GL_QUADS);
+      glColor3f(0.38f, 0.38f, 0.38f);
+    glVertex2f(900,75);
+    glVertex2f(960,75);
+    glVertex2f(963,85);
+    glVertex2f(903,85);
+    glEnd();
+
+    glLineWidth(2);
+    for (int i = 903; i <= 963; i+=10) {
+    glBegin(GL_LINES);
+
+    glColor3f(0.38f, 0.38f, 0.38f);
+    glVertex2f(i,85);
+    glVertex2f(i,90);
+
+    glEnd();
+    }
+
+    glBegin(GL_LINES);
+
+    glColor3f(0.38f, 0.38f, 0.38f);
+    glVertex2f(903,90);
+    glVertex2f(963,90);
+
+    glEnd();
+
+    glBegin(GL_LINES);
+
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glVertex2f(756,82);
+    glVertex2f(903,82);
+
+    glEnd();
+
+
+   glPopMatrix();
+   }
+
+}
+
+void updateboat2(int value)
+{
+    boatPosition2 += boatSpeed2;
+
+    if (boatPosition2 > 2000.0f) {
+        boatPosition2 = -1800.0f;
+    }
+
+    glutPostRedisplay();
+    glutTimerFunc(80, updateboat2, 0);
+}
+
+//Cloud1
+void Cloud1(float x,float y , float z)
+{
+    if(!fogOn)
+    {
+
+    glPushMatrix();
+    glTranslatef(x,y,z);
+
+    glColor3ub(213, 229, 243);
+    glBegin(GL_POLYGON);
+	for(int i=0;i<200;i++)
+    {
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=19.54;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+780,y+920);
+    }
+
+    for(int i=0;i<200;i++)
+    {
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=21.87;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+760.13,y+932.23);
+    }
+
+    for(int i=0;i<200;i++)
+    {
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=20.46;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+760,y+920);
+    }
+
+    for(int i=0;i<200;i++)
+    {
+
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=20;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+740,y+920);
+    }
+
+    for(int i=0;i<200;i++)
+    {
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=15;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+715,y+920);
+    }
+
+    for(int i=0;i<200;i++)
+    {
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=12.71;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+802,y+920);
+    }
+    glEnd();
+    glPopMatrix();
+    }
+
+}
+
+//Cloud2
+void Cloud2(float x, float y, float z)
+{
+    glPushMatrix();
+    glTranslatef(x, y, z);
+    glScalef(0.8f, 0.8f, 1.0f); // Smaller cloud
+    Cloud1(0, 0, 0); // Reuse existing cloud shape
+    glPopMatrix();
+
+}
+
+//Cloud_Timer
+void updateCloud(int value)
+{
+    cloud1 += 0.4f;
+    if (cloud1 > 1900)
+        cloud1 = -1900;
+
+    cloud2 += 0.6f;
+    if (cloud2 > 1500)
+        cloud2 = -1500;
+
+    glutPostRedisplay();
+    glutTimerFunc(5, updateCloud, 0);
+}
+
+void Flower(float x, float y, float z)
+{
+    glPushMatrix();
+    glTranslatef(x,y,z);
+
+    //glColor3ub(180, 0, 0);
+    glBegin(GL_POLYGON);
+	for(int i=0;i<200;i++)
+    {
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=5.0;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+200,y+298);
+    }
+
+    for(int i=0;i<200;i++)
+    {
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=5.0;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+210,y+292);
+    }
+
+    for(int i=0;i<200;i++)
+    {
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=5.0;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+205,y+286);
+    }
+
+    for(int i=0;i<200;i++)
+    {
+
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=5.0;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+195,y+286);
+    }
+
+    for(int i=0;i<200;i++)
+    {
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=5.0;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+190,y+292);
+    }
+
+    glEnd();
+    glPopMatrix();
+
+}
+
+void BackFlower(float x, float y, float z)
+{
+    if(!fogOn)
+    {
+
+    glPushMatrix();
+    glTranslatef(x, y, z);
+    glScalef(0.6f, 0.6f, 1.0f); // Smaller flower
+    glColor3ub(100, 0, 200);
+    Flower(0, 0, 0); // Reuse existing flower shape
+    glPopMatrix();
+    }
+
+}
+
+void RightFlower(float x, float y, float z)
+{
+    glPushMatrix();
+    glTranslatef(x, y, z);
+    glScalef(0.9f, 0.9f, 1.0f); // Smaller flower
+    glColor3ub(220, 220, 0);
+    Flower(0, 0, 0); // Reuse existing flower shape
+    glPopMatrix();
+
+}
+
+void drawBird(float x, float y)
+{
+    glColor3ub(5, 5, 5);
+
+    glBegin(GL_TRIANGLES);
+
+    glVertex2f(x, y);
+    glVertex2f(x - 15, y + 8);
+    glVertex2f(x - 15, y - 8);
+
+    glEnd();
+}
+
+void updateBird(int value)
+{
+    for(int i = 0; i < 4; i++)
+    {
+        birdX[i] += 2.0f;
+    }
+
+    for(int i = 0; i < 4; i++)
+    {
+        if(birdX[i] > 2000)
+            birdX[i] = -100;
+    }
+
+    glutPostRedisplay();
+    glutTimerFunc(16, updateBird, 0);
+}
+
+
+void Trees(float x, float y, float z)
+{
+    //LEFT 6 SMALL TREES
+    glPushMatrix();
+    glTranslatef(x,y,z);
+
+    glColor3ub(58, 176, 89);
+    glBegin(GL_TRIANGLES);
+        glVertex2f(280,380);
+        glVertex2f(300,460);
+        glVertex2f(320,380);
+
+        glVertex2f(315,400);
+        glVertex2f(326,462);
+        glVertex2f(340,400);
+
+        glVertex2f(340,380);
+        glVertex2f(360,460);
+        glVertex2f(380,380);
+
+        glVertex2f(380,400);
+        glVertex2f(400,460);
+        glVertex2f(420,400);
+
+        glVertex2f(368,440);
+        glVertex2f(380,480);
+        glVertex2f(392,440);
+    glEnd();
+
+    glPopMatrix();
+}
+
+void tree2(float a, float b, float c,float sx, float sy, float sz)
+{
+    glPushMatrix();
+    glTranslatef(a,b,c);
+    glScalef(sx, sy, sz);
+
+    glBegin(GL_POLYGON);
+	for(int i=0;i<200;i++)
+    {
+            glColor3ub(58, 176, 89);
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=35;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+45.02,y+640.33);
+    }
+    glEnd();
+
+    glBegin(GL_POLYGON);
+        for(int i=0;i<200;i++)
+        {
+            glColor3ub(58, 176, 89);
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=35;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+98,y+640);
+        }
+    glEnd();
+
+    glBegin(GL_POLYGON);
+        for(int i=0;i<200;i++)
+            {
+                glColor3ub(58, 176, 89);
+                float pi=3.1416;
+                float A=(i*2*pi)/200;
+                float r=35;
+                float x = r * cos(A);
+                float y = r * sin(A);
+                glVertex2f(x+70,y+689);
+            }
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glColor3ub(41, 159, 76);
+        glVertex2f(66, 620);
+        glVertex2f(70, 620);
+        glVertex2f(70, 704);
+        glVertex2f(66, 694);
+
+        glVertex2f(70, 632);
+        glVertex2f(96, 658);
+        glVertex2f(88, 653);
+        glVertex2f(70, 635);
+
+        glVertex2f(66, 644);
+        glVertex2f(44, 666);
+        glVertex2f(48, 658);
+        glVertex2f(66, 640);
+    glEnd();
+
+    glPopMatrix();
+}
+
+void tree3(float p,float r,float t)
+{
+    glColor3ub(7, 100, 87);
+    glPushMatrix();
+    glTranslatef(p,r,t);
+
+    glBegin(GL_TRIANGLES);
+        glVertex2f(700,650);
+        glVertex2f(715,677);
+        glVertex2f(726,650);
+
+        glVertex2f(725,655);
+        glVertex2f(735,690);
+        glVertex2f(745,655);
+
+        glVertex2f(745,650);
+        glVertex2f(755,685);
+        glVertex2f(765,650);
+    glEnd();
+
+    glPopMatrix();
+}
+
+void tree3detailing(float p,float r,float t)
+{
+    glColor3ub(61, 67, 60);
+    glPushMatrix();
+    glTranslatef(p,r,t);
+    glBegin(GL_QUADS);
+
+    glVertex2f(715, 645);
+    glVertex2f(715, 643);
+    glVertex2f(765, 643);
+    glVertex2f(765, 645);
+
+    glEnd();
+
+    glPopMatrix();
+}
+
+//Mountains
+void Mountain()
+{   //1ST Mountain
+    glColor3ub(93, 199, 101);
+    glBegin(GL_POLYGON);
+        glVertex2f(0,700);
+        glVertex2f(31.4,746.8);
+        glVertex2f(46.3,778.8);
+        glVertex2f(77.5,843.2);
+        glVertex2f(103.9,874.1);
+        glVertex2f(137.3,900.9);
+        glVertex2f(170.5,923.3);
+        glVertex2f(199.7,941.7);
+        glVertex2f(231.6,947.8);
+        glVertex2f(256.8,949.1);
+        glVertex2f(305.6,943);
+        glVertex2f(354.5,924.7);
+        glVertex2f(378.2,877.1);
+        glVertex2f(400,837.2);
+        glVertex2f(437.3,769);
+        glVertex2f(469.6,673.9);
+        glVertex2f(494.2,638.5);
+        glVertex2f(509.3,598.9);
+        glVertex2f(533.4,563.00);
+        glVertex2f(559.9,530.4);
+        glVertex2f(600,480);
+        glVertex2f(614.2,462.2);
+        glVertex2f(650.8,400);
+        glVertex2f(0,400);
+
+    //2nd Mountain
+    glColor3ub(81, 172, 56);
+        glVertex2f(650.8,400);
+        glVertex2f(614.2,462.2);
+        glVertex2f(600,480);
+        glVertex2f(559.9,530.4);
+        glVertex2f(533.4,563.00);
+        glVertex2f(509.3,598.9);
+        glVertex2f(494.2,638.5);
+        glVertex2f(469.6,673.9);
+        glVertex2f(437.3,769);
+        glVertex2f(400,837.2);
+        glVertex2f(440,882.4);
+        glVertex2f(483.6,893.9);
+        glVertex2f(527.2,880.04);
+        glVertex2f(576.9,846.9);
+        glVertex2f(600,800);
+        glVertex2f(614.3,768.1);
+        glVertex2f(638.7,724.5);
+        glVertex2f(653.3,694.2);
+        glVertex2f(668.6,662.7);
+        glVertex2f(714.9,609.1);
+        glVertex2f(740.1,529.8);
+        glVertex2f(805.4,442.4);
+        glVertex2f(790.8,437.6);
+        glVertex2f(762.9,429.7);
+        glVertex2f(722.7,427.8);
+        glVertex2f(680,420);
+        glVertex2f(643.2,414);
+        glVertex2f(614.2,462.2);
+        glVertex2f(600,480);
+        glVertex2f(559.9,530.4);
+        glVertex2f(533.4,563.00);
+        glVertex2f(509.3,598.9);
+        glVertex2f(494.2,638.5);
+        glVertex2f(469.6,673.9);
+        glVertex2f(437.3,769);
+        glVertex2f(400,837.2);
+    glEnd();
+}
+
+void backgroundmountain()
+{
+    glColor3ub(67, 128, 153);
+    glBegin(GL_TRIANGLES);
+        glVertex2f(300,750);
+        glVertex2f(400,950);
+        glVertex2f(500,750);
+
+        glVertex2f(80,800);
+        glVertex2f(150,950);
+        glVertex2f(250,800);
+
+        glVertex2f(20,700);
+        glVertex2f(110,970);
+        glVertex2f(250,700);
+
+    glColor3ub(70, 116, 135);
+        glVertex2f(900,650);
+        glVertex2f(1040,770);
+        glVertex2f(1180,650);
+
+        glVertex2f(1250,650);
+        glVertex2f(1400,750);
+        glVertex2f(1550,650);
+
+        glVertex2f(1180,650);
+        glVertex2f(1180,650);
+        glVertex2f(1180,650);
+
+        glVertex2f(600,650);
+        glVertex2f(700,750);
+        glVertex2f(800,650);
+
+        glVertex2f(650,650);
+        glVertex2f(750,750);
+        glVertex2f(850,650);
+
+        glVertex2f(1600,650);
+        glVertex2f(1697,697);
+        glVertex2f(1770,650);
+    glEnd();
+
+    //round mountain
+    glBegin(GL_POLYGON);
+        for(int i=0;i<200;i++)
+            {
+                glColor3ub(70, 116, 135);
+                float pi=3.1416;
+                float A=(i*2*pi)/200;
+                float r=15.044;
+                float x = r * cos(A);
+                float y = r * sin(A);
+                glVertex2f(x+1740,y+667);
+            }
+
+        for(int i=0;i<200;i++)
+        {
+            glColor3ub(70, 116, 135);
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=22.74;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+1660,y+675);
+        }
+
+        for(int i=0;i<200;i++)
+        {
+            glColor3ub(70, 116, 135);
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=44;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+1470.14,y+695.67);
+        }
+
+        for(int i=0;i<200;i++)
+        {
+            glColor3ub(70, 116, 135);
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=46;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+1330,y+700);
+        }
+
+        for(int i=0;i<200;i++)
+        {
+            glColor3ub(70, 116, 135);
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=51.68;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+1112.07,y+704.65);
+        }
+
+        for(int i=0;i<200;i++)
+        {
+            glColor3ub(70, 116, 135);
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=50.14;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+977.37,y+709.95);
+        }
+    glEnd();
+
+    glColor3ub(67, 128, 153);
+    glBegin(GL_TRIANGLES);
+        glColor3ub(67, 128, 153);
+        glVertex2f(682.189,646.974);
+        glVertex2f(860,820);
+        glVertex2f(1050,650);
+
+        glVertex2f(1050,650);
+        glVertex2f(1210,800);
+        glVertex2f(1400,650);
+
+        glVertex2f(1400,650);
+        glVertex2f(1550,760);
+        glVertex2f(1700,650);
+
+        glVertex2f(1700,650);
+        glVertex2f(1800,700);
+        glVertex2f(1900,650);
+    glEnd();
+}
+
+void sky() //F06
+{
+    glColor3ub(135,200,245);
+    glBegin(GL_QUADS);
+        glVertex2f(1900,650);
+        glVertex2f(1900,1000);
+        glVertex2f(0, 1000);
+        glVertex2f(0, 650);
+    glEnd();
+}
+
+void sun()
+{
+    if (fogOn) {
+
+        float glowAlpha = fogDensity * 0.35f;
+        glColor4f(0.95f, 0.95f, 0.80f, glowAlpha);
+        glBegin(GL_POLYGON);
+        for(int i=0;i<200;i++)
+        {
+            float pi=3.1416f;
+            float A=(i*2*pi)/200;
+            float r=90;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+620,y+900);
+        }
+        glEnd();
+
+        // Inner glow (slightly brighter but still faded)
+        float innerAlpha = fogDensity * 0.25f;
+        glColor4f(0.98f, 0.97f, 0.75f, innerAlpha);
+        glBegin(GL_POLYGON);
+        for(int i=0;i<200;i++)
+        {
+            float pi=3.1416f;
+            float A=(i*2*pi)/200;
+            float r=50;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+620,y+900);
+        }
+        glEnd();
+    } else {
+        // Normal bright sun
+        glBegin(GL_POLYGON);
+        for(int i=0;i<200;i++)
+        {
+            glColor3ub(232, 232, 71);
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=40;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+620,y+900);
+        }
+        glEnd();
+    }
+}
+
+//Right-side-Land
+void Land2()
+{
+    glBegin(GL_POLYGON);
+    glColor3ub(103, 201, 93);
+        glVertex2f(1143.90,0);
+        glVertex2f(1152,27);
+        glVertex2f(1208,60);
+        glVertex2f(1289,117);
+        glVertex2f(1400,200);
+        glVertex2f(1508,211);
+        glVertex2f(1600,200);
+        glVertex2f(1685,255);
+        glVertex2f(1697,286);
+        glVertex2f(1719,303);
+        glVertex2f(1747,349);
+        glVertex2f(1758,387);
+        glVertex2f(1840,420);
+        glVertex2f(1860,420);
+        glVertex2f(1873,428);
+        glVertex2f(1900,446);
+        glVertex2f(1900,0);
+        glVertex2f(1143,0);
+    glEnd();
+
+}
+
+void Bridge()
+{
+    //Bridge_Road
+    glBegin(GL_QUADS);
+    glColor3ub(87, 111, 126);
+        glVertex2f(1900,500);
+        glVertex2f(1900,530);
+        glVertex2f(0,530);
+        glVertex2f(0,500);
+
+    //Bridge Pillar
+    glColor3ub(87, 111, 126);
+        glVertex2f(1780,500);
+        glVertex2f(1820,500);
+        glVertex2f(1820,300);
+        glVertex2f(1780,300);
+
+        glVertex2f(1460,500);
+        glVertex2f(1500,500);
+        glVertex2f(1500,300);
+        glVertex2f(1460,300);
+
+        glVertex2f(1140,500);
+        glVertex2f(1180,500);
+        glVertex2f(1180,300);
+        glVertex2f(1140,300);
+
+        glVertex2f(820,500);
+        glVertex2f(860,500);
+        glVertex2f(860,300);
+        glVertex2f(820,300);
+
+        glVertex2f(500,500);
+        glVertex2f(540,500);
+        glVertex2f(540,300);
+        glVertex2f(500,300);
+
+        glVertex2f(180,500);
+        glVertex2f(220,500);
+        glVertex2f(220,300);
+        glVertex2f(180,300);
+
+        //pillar_design
+        glVertex2f(1760, 300);
+        glVertex2f(1760, 280);
+        glVertex2f(1840,280);
+        glVertex2f(1840, 300);
+
+        glVertex2f(1820,460);
+        glVertex2f(1860,500);
+        glVertex2f(1880,500);
+        glVertex2f(1820,440);
+
+        glVertex2f(1740,500);
+        glVertex2f(1780,460);
+        glVertex2f(1780,440);
+        glVertex2f(1720,500);
+
+         //pillar_2_design
+        glVertex2f(1440,300);
+        glVertex2f(1520,300);
+        glVertex2f(1520,290);
+        glVertex2f(1440,290);
+
+        glVertex2f(1500,460);
+        glVertex2f(1540,500);
+        glVertex2f(1560,500);
+        glVertex2f(1500,440);
+
+        glVertex2f(1420,500);
+        glVertex2f(1460,460);
+        glVertex2f(1460,440);
+        glVertex2f(1400,500);
+
+        glVertex2f(1120,300);
+        glVertex2f(1200,300);
+        glVertex2f(1200,290);
+        glVertex2f(1120,290);
+
+        glVertex2f(1180,460);
+        glVertex2f(1220,500);
+        glVertex2f(1240,500);
+        glVertex2f(1180,440);
+
+        glVertex2f(1100,500);
+        glVertex2f(1140,460);
+        glVertex2f(1140,440);
+        glVertex2f(1080,500);
+
+        glVertex2f(800,300);
+        glVertex2f(880,300);
+        glVertex2f(880,290);
+        glVertex2f(800,290);
+
+        glVertex2f(860,460);
+        glVertex2f(900,500);
+        glVertex2f(920,500);
+        glVertex2f(860,440);
+
+        glVertex2f(780,500);
+        glVertex2f(820,460);
+        glVertex2f(820,440);
+        glVertex2f(760,500);
+
+        glVertex2f(480,300);
+        glVertex2f(560,300);
+        glVertex2f(560,290);
+        glVertex2f(480,290);
+
+        glVertex2f(540,460);
+        glVertex2f(580,500);
+        glVertex2f(600,500);
+        glVertex2f(540,440);
+
+        glVertex2f(460,500);
+        glVertex2f(500,460);
+        glVertex2f(500,440);
+        glVertex2f(440,500);
+
+        glVertex2f(160, 300);
+        glVertex2f(160, 280);
+        glVertex2f(240, 280);
+        glVertex2f(240, 300);
+
+        glVertex2f(180, 440);
+        glVertex2f(120, 500);
+        glVertex2f(140, 500);
+        glVertex2f(180, 460);
+
+        glVertex2f(220, 440);
+        glVertex2f(280, 500);
+        glVertex2f(260, 500);
+        glVertex2f(220, 460);
+
+    //Bridge Road line design
+    glColor3ub(169, 66, 40);
+        glVertex2f(1900,520);
+        glVertex2f(1900,530);
+        glVertex2f(0,530);
+        glVertex2f(0,520);
+
+    glColor3ub(114, 44, 26);
+        glVertex2f(0,520);
+        glVertex2f(1900,520);
+        glVertex2f(1900,524);
+        glVertex2f(0,524);
+    glEnd();
+}
+
+//bridge_structure
+void bridge_structure(float a, float b, float c)
+{
+    glPushMatrix();
+    glTranslatef(a,b,c);
+
+    glBegin(GL_QUADS);
+    glColor3ub(169, 66, 40);
+        glVertex2f(120, 530);
+        glVertex2f(140,530);
+        glVertex2f(240, 620);
+        glVertex2f(240, 640);
+
+    glColor3ub(169, 66, 40);
+        glVertex2f(600, 530);
+        glVertex2f(580,530);
+        glVertex2f(480, 620);
+        glVertex2f(480, 640);
+
+        glVertex2f(240, 625);
+        glVertex2f(480, 625);
+        glVertex2f(480, 640);
+        glVertex2f(240, 640);
+
+        glVertex2f(380, 530);
+        glVertex2f(486, 624);
+        glVertex2f(475, 630);
+        glVertex2f(360,530);
+
+        glVertex2f(230, 620);
+        glVertex2f(240, 630);
+        glVertex2f(360, 530);
+        glVertex2f(340,530);
+
+        glVertex2f(354, 530);
+        glVertex2f(366, 530);
+        glVertex2f(366, 640);
+        glVertex2f(354,640);
+
+        glVertex2f(235, 530);
+        glVertex2f(245, 530);
+        glVertex2f(245, 635);
+        glVertex2f(235, 635);
+
+        glVertex2f(475, 530);
+        glVertex2f(488, 530);
+        glVertex2f(488, 635);
+        glVertex2f(475, 635);
+    glEnd();
+
+    bridge_blinkinglight();
+    bridge_blinkinglight2();
+
+    glPopMatrix();
+}
+
+void pilar_Shadow()
+{
+    if(!fogOn)
+    {
+    glBegin(GL_QUADS);
+
+        glColor3ub(54, 138, 161);
+
+        glVertex2f(560, 100);
+        glVertex2f(600, 100);
+        glVertex2f(540, 290);
+        glVertex2f(500, 290);
+
+        glVertex2f(900, 100);
+        glVertex2f(940, 100);
+        glVertex2f(860, 290);
+        glVertex2f(820, 290);
+
+        glVertex2f(1220, 100);
+        glVertex2f(1260, 100);
+        glVertex2f(1180, 290);
+        glVertex2f(1140, 290);
+
+        glVertex2f(1540, 100);
+        glVertex2f(1580, 100);
+        glVertex2f(1500, 290);
+        glVertex2f(1460, 290);
+
+    glEnd();
+    }
+}
+
+float bridgeLightOn;
+
+void updateBridgeLight(int value)
+{
+    bridgeLightOn = !bridgeLightOn;  // Toggle the light
+    glutPostRedisplay();
+    glutTimerFunc(100, updateBridgeLight, 0); // Blink every 500ms
+}
+
+//bridge_lights
+void bridge_blinkinglight()
+{
+    glBegin(GL_QUADS);
+    glColor3ub(99, 99, 89);
+        glVertex2f(240,640);
+        glVertex2f(255,640);
+        glVertex2f(255,645);
+        glVertex2f(240,645);
+
+        if (train_speed == 0)
+        {
+            glColor3ub(0, 255, 0);
+        }
+        else if (bridgeLightOn)
+        {
+            glColor3ub(237, 42, 14);
+        }
+        else
+        {
+            glColor3ub(72, 68, 67);
+        }
+
+        glVertex2f(242, 645);
+        glVertex2f(253, 645);
+        glVertex2f(253, 654);
+        glVertex2f(242, 654);
+    glEnd();
+}
+
+void bridge_blinkinglight2() //F10.3
+{
+    glBegin(GL_QUADS);
+    glColor3ub(99, 99, 89);
+        glVertex2f(480, 640);
+        glVertex2f(480, 645);
+        glVertex2f(465, 645);
+        glVertex2f(465, 640);
+
+        if (train_speed == 0)
+        {
+            glColor3ub(0, 255, 0);
+        }
+        else if (bridgeLightOn)
+        {
+            glColor3ub(237, 42, 14);
+        }
+        else
+        {
+            glColor3ub(72, 68, 67);
+        }
+
+        glVertex2f(467, 645);
+        glVertex2f(478, 645);
+        glVertex2f(478, 654);
+        glVertex2f(467, 654);
+    glEnd();
+}
+
+//Highway road
+void road()
+{
+    glBegin(GL_QUADS);
+
+	glColor3ub(111,111,111);
+	glVertex2f(0,180);
+    glVertex2f(0,0);
+    glVertex2f(1900,0);
+	glVertex2f(1900,180);
+
+	glColor3ub(255,255,255);
+	glVertex2f(0,92);
+    glVertex2f(0,88);
+    glVertex2f(1900,88);
+	glVertex2f(1900,92);
+
+	glColor3ub(11, 11, 11 );
+	glVertex2f(0,188);
+	glVertex2f(1900,188);
+	glVertex2f(1900,200);
+	glVertex2f(0,200);
+
+	glEnd();
+}
+
+void road_piller(float a, float b, float c)
+{
+    glPushMatrix();
+    glTranslatef(a,b,c);
+
+    glColor3ub(232, 229, 44);
+    glBegin(GL_QUADS);
+    glVertex2f(4, 188);
+    glVertex2f(16, 188);
+    glVertex2f(28, 200);
+    glVertex2f(16, 200);
+
+    glEnd();
+
+    glPopMatrix();
+}
+
+void road_piller2(float a, float b, float c)
+{
+
+    glPushMatrix();
+    glTranslatef(a,b,c);
+
+    glColor3ub(0,0,0);
+    glBegin(GL_QUADS);
+    glVertex2f(8, 180);
+    glVertex2f(16, 180);
+    glVertex2f(16, 188);
+    glVertex2f(8, 188);
+    glEnd();
+
+    glPopMatrix();
+}
+
+void Left_tree(float x, float y, float z)
+{
+    glPushMatrix();
+    glTranslatef(x,y,z);
+
+    const float pi = 3.1416f;
+
+    // Leaves cluster
+    for (int k = 0; k < 4; k++)
+    {
+        glBegin(GL_POLYGON);
+        for(int i=0;i<200;i++)
+        {
+            glColor3ub(83, 148, 40);
+            float A=(i*2*pi)/200;
+            float r=50 + k*2;
+            float cx = r * cos(A);
+            float cy = r * sin(A);
+            glVertex2f(cx + 1700 + k*30, cy + 250 + k*10);
+        }
+        glEnd();
+    }
+
+    // Trunk
+    glBegin(GL_QUADS);
+    glColor3ub(43, 83, 16);
+        glVertex2f(1745, 180);
+        glVertex2f(1750, 180);
+        glVertex2f(1750, 335);
+        glVertex2f(1745, 330);
+    glEnd();
+
+    glPopMatrix();
+}
+
+void left_tree2(float a, float b, float c)
+{
+    //road behind trees
+    glPushMatrix();
+    glTranslatef(a, b, c);
+
+    const float pi = 3.1416f;
+
+    // Left Leaf Cluster 1
+    glColor3ub(83, 148, 40);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 200; i++) {
+        float A = (i * 2 * pi) / 200;
+        float r = 21.346;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x + 1280, y + 280);
+    }
+    glEnd();
+
+    // Middle Leaf Cluster 2
+    glColor3ub(83, 148, 40);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 200; i++) {
+        float A = (i * 2 * pi) / 200;
+        float r = 21.346;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x + 1310, y + 280);
+    }
+    glEnd();
+
+    glColor3ub(83, 148, 40);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 200; i++) {
+        float A = (i * 2 * pi) / 200;
+        float r = 21.346;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x + 1340, y + 280);
+    }
+    glEnd();
+
+    glColor3ub(83, 148, 40);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 200; i++) {
+        float A = (i * 2 * pi) / 200;
+        float r = 21.346;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x + 1370, y + 280);
+    }
+    glEnd();
+
+    glColor3ub(83, 148, 40);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 200; i++) {
+        float A = (i * 2 * pi) / 200;
+        float r = 21.5;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x + 1309, y + 94);
+    }
+    glEnd();
+
+    glColor3ub(83, 148, 40);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 200; i++) {
+        float A = (i * 2 * pi) / 200;
+        float r = 21.5;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x + 1340, y +294);
+    }
+    glEnd();
+    glPopMatrix();
+}
+
+float busPosition3= 0.0;
+float busSpeed3 = -5;
+void updateBus(int value)
+{
+    busPosition3 +=busSpeed3;
+    if (busPosition3 < -1900.0f) {
+        busPosition3 = 1900.0f;
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateBus, 0);
+}
+
+void bus7()
+{
+    if(!fogOn)
+    {
+
+    glPushMatrix();
+    glTranslatef(busPosition3,0, 0.0f);
+
+    glColor3ub(184, 184, 155);
+    glBegin(GL_POLYGON);
+    glVertex2f(293, 245);
+    glVertex2f(290, 244);
+    glVertex2f(287, 242);
+    glVertex2f(286, 241);
+    glVertex2f(285, 239);
+    glVertex2f(284, 237);
+    glVertex2f(284, 235);
+    glVertex2f(284, 233);
+    glVertex2f(284, 222);
+    glVertex2f(283, 207);
+    glVertex2f(282, 191);
+    glVertex2f(280, 181);
+    glVertex2f(279, 172);
+
+    glVertex2f(279, 163);
+    glVertex2f(278, 157);
+    glVertex2f(278, 146);
+    glVertex2f(278, 140);
+
+    glVertex2f(279, 137);
+    glVertex2f(280, 135);
+    glVertex2f(282, 133);
+    glVertex2f(284, 132);
+    glVertex2f(285, 131);
+    glVertex2f(288, 130);
+    glVertex2f(290, 129);
+
+    glVertex2f(631, 130);
+    glVertex2f(635, 131);
+    glVertex2f(640, 131);
+    glVertex2f(644, 132);
+    glVertex2f(648, 133);
+
+    glVertex2f(648, 182);
+    glVertex2f(648, 238);
+    glVertex2f(648, 240);
+    glVertex2f(647, 241);
+    glVertex2f(646, 242);
+    glVertex2f(645, 243);
+    glVertex2f(644, 244);
+    glVertex2f(643, 245);
+    glVertex2f(641, 245);
+    glVertex2f(638, 245);
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(68, 131, 168);
+    glVertex2f(280, 181);
+    glVertex2f(279, 181);
+    glVertex2f(279, 181);
+
+    glVertex2f(280, 181);
+    glVertex2f(281, 181);
+    glVertex2f(283, 181);
+
+    glVertex2f(284, 161);
+    glVertex2f(287, 161);
+    glVertex2f(289, 161);
+    glVertex2f(292, 161);
+    glVertex2f(295, 162);
+    glVertex2f(297, 162);
+    glVertex2f(299, 163);
+    glVertex2f(301, 163);
+    glVertex2f(303, 164);
+    glVertex2f(305, 164);
+    glVertex2f(307, 164);
+    glVertex2f(308, 164);
+    glVertex2f(310, 165);
+    glVertex2f(311, 165);
+    glVertex2f(313, 165);
+    glVertex2f(314, 165);
+    glVertex2f(316, 166);
+    glVertex2f(318, 166);
+    glVertex2f(321, 166);
+    glVertex2f(323, 166);
+    glVertex2f(326, 167);
+    glVertex2f(331, 167);
+    glVertex2f(336, 167);
+    glVertex2f(342, 168);
+    glVertex2f(348, 168);
+    glVertex2f(352, 168);
+    glVertex2f(357, 168);
+    glVertex2f(362, 168);
+    glVertex2f(367, 168);
+    glVertex2f(374, 168);
+    glVertex2f(412, 169);
+    glVertex2f(476, 170);
+    glVertex2f(496, 171);
+    glVertex2f(505, 171);
+    glVertex2f(509, 172);
+    glVertex2f(513, 173);
+    glVertex2f(517, 174);
+    glVertex2f(521, 174);
+    glVertex2f(525, 174);
+    glVertex2f(529, 175);
+    glVertex2f(536, 176);
+    glVertex2f(582, 177);
+    glVertex2f(593, 177);
+    glVertex2f(602, 178);
+    glVertex2f(612, 179);
+    glVertex2f(632, 180);
+    glVertex2f(648, 182);
+
+    glVertex2f(648, 133);
+    glVertex2f(644, 132);
+    glVertex2f(640, 131);
+    glVertex2f(635, 131);
+    glVertex2f(631, 130);
+    glVertex2f(624, 129);
+    glVertex2f(596, 129);
+    glVertex2f(527, 128);
+    glVertex2f(270,129);
+    glVertex2f(317, 129);
+    glVertex2f(294, 129);
+    glVertex2f(290, 129);
+    glVertex2f(288, 130);
+    glVertex2f(285, 131);
+    glVertex2f(284, 132);
+    glVertex2f(282, 133);
+    glVertex2f(280, 135);
+    glVertex2f(279, 137);
+    glVertex2f(278, 140);
+    glVertex2f(278, 146);
+    glVertex2f(278, 157);
+    glVertex2f(279, 163);
+    glVertex2f(279, 172);
+    glVertex2f(280, 181);
+    glEnd();
+
+    //Bus light
+    glBegin(GL_POLYGON);
+    glColor3ub(242, 238, 13);
+    glVertex2f(280, 161);
+    glVertex2f(281, 161);
+    glVertex2f(282, 161);
+    glVertex2f(283, 161);
+    glVertex2f(284, 161);
+    glVertex2f(285, 161);
+    glVertex2f(284, 159);
+    glVertex2f(284, 158);
+    glVertex2f(284, 157);
+    glVertex2f(284, 156);
+    glVertex2f(283, 155);
+    glVertex2f(283, 154);
+    glVertex2f(282, 153);
+    glVertex2f(282, 152);
+    glVertex2f(281, 151);
+    glVertex2f(281, 151);
+    glVertex2f(280, 149);
+    glVertex2f(279, 150);
+    glVertex2f(279, 150);
+    glVertex2f(278, 149);
+
+    glEnd();
+
+    //bus window
+    glBegin(GL_QUADS);
+    glColor3ub(37, 36, 28);
+    glVertex2f(292, 186);
+    glVertex2f(640, 186);
+    glVertex2f(640, 230);
+    glVertex2f(292, 230);
+
+    glVertex2f(292, 170);
+    glVertex2f(334, 170);
+    glVertex2f(334, 186);
+    glVertex2f(292, 186);
+
+    glColor3ub(75, 74, 59);
+    glVertex2f(296, 190);
+    glVertex2f(636, 190);
+    glVertex2f(636, 226);
+    glVertex2f(296, 226);
+
+    glVertex2f(295, 172);
+    glVertex2f(332, 172);
+    glVertex2f(332, 186);
+    glVertex2f(295, 186);
+    glEnd();
+
+//Tier_1
+
+    glColor3ub(0,0,0);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 180; i++) {
+        float local_pi = 3.1416f;
+        float A = (i  * local_pi)/180;
+        float r = 30.59467;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+344, y+128);
+    }
+    glEnd();
+
+      glColor3ub(71, 71, 61);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 24.5619;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+344, y+128);
+    }
+    glEnd();
+
+      glColor3ub(255,255,255);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 13.6464;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+344, y+128);
+    }
+    glEnd();
+
+
+
+      glColor3ub(0,0,0);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 2.898989;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+344, y+128);
+    }
+    glEnd();
+
+//tier_2
+
+  glColor3ub(0,0,0);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 180; i++) {
+        float local_pi = 3.1416f;
+        float A = (i  * local_pi)/180;
+        float r = 30.59467;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+554, y+128);
+    }
+    glEnd();
+
+      glColor3ub(71, 71, 61);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 24.5619;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+554, y+128);
+    }
+    glEnd();
+
+      glColor3ub(255,255,255);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 13.6464;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+554, y+128);
+    }
+    glEnd();
+
+      glColor3ub(0,0,0);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 2.898989;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+554, y+128);
+    }
+    glEnd();
+
+
+  windowline(0,0,0);
+  windowline(10,0,0);
+  windowline(90,0,0);
+  windowline(170,0,0);
+  windowline(250,0,0);
+
+    glPopMatrix();
+    }
+}
+
+//Cargo
+void cargo_Truck(float a, float b, float c)
+{
+   glPushMatrix();
+    glTranslatef(a,b,c);
+
+    glColor3ub(184, 184, 155);
+    glBegin(GL_POLYGON);
+
+    glVertex2f(1416, 211);
+    glVertex2f(1418, 213);
+    glVertex2f(1419, 215);
+    glVertex2f(1419, 216);
+    glVertex2f(1421, 217);
+    glVertex2f(1422, 218);
+    glVertex2f(1423, 219);
+    glVertex2f(1425, 220);
+    glVertex2f(1426, 220);
+    glVertex2f(1427, 220);
+    glVertex2f(1428, 220);
+    glVertex2f(1431, 220);
+    glVertex2f(1435, 220);
+    glVertex2f(1496, 220);
+    glVertex2f(1498, 220);
+    glVertex2f(1499, 219);
+    glVertex2f(1501, 218);
+    glVertex2f(1501, 218);
+    glVertex2f(1502, 217);
+    glVertex2f(1503, 216);
+    glVertex2f(1504, 216);
+    glVertex2f(1504, 215);
+    glVertex2f(1505, 213);
+    glVertex2f(1505, 212);
+    glVertex2f(1505, 207);
+    glVertex2f(1505, 128);
+    glVertex2f(1505, 98);
+    glVertex2f(1437, 99);
+    glVertex2f(1437, 95);
+    glVertex2f(1397, 95);
+    glVertex2f(1396, 95);
+    glVertex2f(1395, 96);
+    glVertex2f(1395, 96);
+    glVertex2f(1394, 97);
+    glVertex2f(1394, 97);
+    glVertex2f(1393, 98);
+    glVertex2f(1393, 98);
+    glVertex2f(1392, 99);
+    glVertex2f(1392, 100);
+    glVertex2f(1392, 101);
+    glVertex2f(1391, 147);
+    glVertex2f(1392, 149);
+    glVertex2f(1392, 150);
+    glVertex2f(1393, 151);
+    glVertex2f(1393, 152);
+    glVertex2f(1394, 154);
+    glVertex2f(1394, 155);
+    glVertex2f(1395, 156);
+    glVertex2f(1397, 160);
+    glVertex2f(1416, 211);
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(85, 85, 76);
+    glVertex2f(1505, 128);
+    glVertex2f(1505, 98);
+    glVertex2f(1437, 99);
+    glVertex2f(1437, 101);
+    glVertex2f(1437, 105);
+    glVertex2f(1437, 107);
+    glVertex2f(1437, 109);
+    glVertex2f(1438, 110);
+    glVertex2f(1438, 112);
+    glVertex2f(1439, 113);
+    glVertex2f(1439, 114);
+    glVertex2f(1440, 115);
+    glVertex2f(1440, 116);
+    glVertex2f(1441, 117);
+    glVertex2f(1442, 118);
+    glVertex2f(1442, 119);
+    glVertex2f(1443, 119);
+    glVertex2f(1444, 120);
+    glVertex2f(1444, 121);
+    glVertex2f(1445, 122);
+    glVertex2f(1447, 123);
+    glVertex2f(1447, 123);
+    glVertex2f(1448, 124);
+    glVertex2f(1449, 125);
+    glVertex2f(1451, 125);
+    glVertex2f(1452, 126);
+    glVertex2f(1453, 126);
+    glVertex2f(1455, 127);
+    glVertex2f(1456, 127);
+    glVertex2f(1458, 127);
+    glVertex2f(1505, 128);
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(62, 74, 76);
+
+    glVertex2f(1506, 105);
+    glVertex2f(1506, 124);
+    glVertex2f(1867, 125);
+    glVertex2f(1867, 106);
+    glVertex2f(1506, 105);
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(68, 131, 168);
+
+    glVertex2f(1867, 125);
+    glVertex2f(1867, 245);
+    glVertex2f(1517, 247);
+    glVertex2f(1517, 125);
+    glVertex2f(1867, 125);
+
+    glEnd();
+
+      glColor3ub(77, 78, 57);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 180; i++)
+    {
+        float local_pi = 3.1416f;
+        float A = (i  * local_pi)/180;
+        float r = 27;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+1471, y+100);
+    }
+    glEnd();
+
+     glColor3ub(45, 45, 34);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 25.787;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+1471, y+100);
+    }
+    glEnd();
+
+     glColor3ub(122, 123, 100);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 16;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+1471, y+100);
+    }
+    glEnd();
+
+    glColor3ub(45, 45, 34);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 7;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+1471, y+100);
+    }
+    glEnd();
+
+    //2nd
+    glColor3ub(45, 45, 34);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 25.787;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+1614, y+100);
+    }
+    glEnd();
+
+    glColor3ub(122, 123, 100);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 16;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+1614, y+100);
+    }
+    glEnd();
+
+
+    glColor3ub(45, 45, 34);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 7;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+1614, y+100);
+    }
+    glEnd();
+
+    //3rd
+    glColor3ub(45, 45, 34);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 25.787;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+1670, y+100);
+    }
+    glEnd();
+
+    glColor3ub(122, 123, 100);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 16;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+1670, y+100);
+    }
+    glEnd();
+
+    glColor3ub(45, 45, 34);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 7;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+1670, y+100);
+    }
+    glEnd();
+
+//4th
+ glColor3ub(45, 45, 34);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 25.787;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+1820, y+100);
+    }
+    glEnd();
+
+    glColor3ub(122, 123, 100);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 16;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+1820, y+100);
+    }
+    glEnd();
+
+    glColor3ub(45, 45, 34);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float local_pi = 3.1416f;
+        float A = (i *2 * local_pi)/180;
+        float r = 7;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+1820, y+100);
+    }
+    glEnd();
+
+   glBegin(GL_POLYGON);
+    glColor3ub(57, 79, 78);
+
+    glVertex2f(1427, 201);
+    glVertex2f(1428, 202);
+    glVertex2f(1428, 203);
+    glVertex2f(1429, 204);
+    glVertex2f(1430, 205);
+     glVertex2f(1431, 206);
+    glVertex2f(1432, 207);
+    glVertex2f(1472, 206);
+    glVertex2f(1473, 206);
+    glVertex2f(1474, 205);
+     glVertex2f(1475, 205);
+    glVertex2f(1475, 204);
+    glVertex2f(1476, 204);
+    glVertex2f(1476, 203);
+    glVertex2f(1477, 203);
+     glVertex2f(1477, 202);
+    glVertex2f(1477, 202);
+    glVertex2f(1477, 201);
+    glVertex2f(1477, 162);
+    glVertex2f(1477, 161);
+    glVertex2f(1476, 160);
+     glVertex2f(1476, 160);
+    glVertex2f(1475, 159);
+    glVertex2f(1474, 158);
+    glVertex2f(1474, 158);
+    glVertex2f(1473, 157);
+    glVertex2f(1472, 157);
+     glVertex2f(1471, 156);
+    glVertex2f(1471, 156);
+    glVertex2f(1470, 156);
+    glVertex2f(1468, 156);
+    glVertex2f(1426, 154);
+    glVertex2f(1425, 154);
+     glVertex2f(1425, 154);
+    glVertex2f(1424, 154);
+    glVertex2f(1424, 154);
+    glVertex2f(1423, 155);
+    glVertex2f(1423, 157);
+     glVertex2f(1423, 159);
+    glVertex2f(1427, 201);
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(57, 79, 78);
+
+    glVertex2f(1415, 206);
+    glVertex2f(1416, 206);
+    glVertex2f(1417, 206);
+    glVertex2f(1418, 206);
+    glVertex2f(1419, 206);
+    glVertex2f(1420, 205);
+    glVertex2f(1421, 205);
+    glVertex2f(1421, 204);
+    glVertex2f(1421, 203);
+    glVertex2f(1421, 201);
+    glVertex2f(1405, 159);
+    glVertex2f(1405, 159);
+    glVertex2f(1404, 159);
+    glVertex2f(1403, 159);
+    glVertex2f(1402, 159);
+
+    glVertex2f(1400, 159);
+    glVertex2f(1399, 159);
+    glVertex2f(1397, 160);
+    glVertex2f(1415, 206);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(241, 234, 28);
+
+    glVertex2f(1392, 126);
+    glVertex2f(1401, 126);
+    glVertex2f(1403, 125);
+    glVertex2f(1403, 124);
+    glVertex2f(1403, 123);
+    glVertex2f(1402, 122);
+    glVertex2f(1401, 122);
+    glVertex2f(1392, 122);
+    glVertex2f(1392, 126);
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(52, 52, 50);
+
+    glVertex2f(1523, 112);
+    glVertex2f(1523, 113);
+    glVertex2f(1523, 114);
+    glVertex2f(1524, 114);
+    glVertex2f(1524, 115);
+    glVertex2f(1525, 116);
+    glVertex2f(1525, 116);
+    glVertex2f(1526, 117);
+    glVertex2f(1577, 117);
+    glVertex2f(1578, 117);
+    glVertex2f(1580, 116);
+     glVertex2f(1581, 115);
+    glVertex2f(1582, 114);
+    glVertex2f(1582, 113);
+    glVertex2f(1582, 112);
+    glVertex2f(1582, 103);
+    glVertex2f(1582, 102);
+    glVertex2f(1581, 101);
+    glVertex2f(1580, 100);
+    glVertex2f(1580, 100);
+     glVertex2f(1579, 99);
+    glVertex2f(1578, 99);
+    glVertex2f(1578, 99);
+    glVertex2f(1527, 99);
+
+     glVertex2f(1525, 100);
+    glVertex2f(1524, 100);
+    glVertex2f(1523, 101);
+    glVertex2f(1523, 102);
+
+     glVertex2f(1522, 103);
+    glVertex2f(1522, 105);
+    glVertex2f(1523, 112);
+
+    glEnd();
+
+     glBegin(GL_LINES);
+    glColor3ub(115, 115, 109);
+
+    glVertex2f(1534, 99);
+    glVertex2f(1534, 117);
+
+    glVertex2f(1552, 99);
+    glVertex2f(1551, 117);
+
+     glVertex2f(1569, 99);
+    glVertex2f(1569, 117);
+
+    glEnd();
+
+     glBegin(GL_POLYGON);
+    glColor3ub(0,0,0);
+
+    glVertex2f(1468, 148);
+    glVertex2f(1481, 148);
+    glVertex2f(1481, 153);
+    glVertex2f(1468, 152);
+    glVertex2f(1468, 148);
+
+    glEnd();
+
+
+    cargo_design(0,0,0);
+    cargo_design(17,0,0);
+    cargo_design(34,0,0);
+    cargo_design(51,0,0);
+    cargo_design(68,0,0);
+    cargo_design(85,0,0);
+    cargo_design(102,0,0);
+    cargo_design(119, 0, 0);
+    cargo_design(136, 0, 0);
+    cargo_design(153, 0, 0);
+    cargo_design(170, 0, 0);
+    cargo_design(187, 0, 0);
+    cargo_design(204, 0, 0);
+    cargo_design(221, 0, 0);
+    cargo_design(238, 0, 0);
+    cargo_design(255, 0, 0);
+    cargo_design(272, 0, 0);
+    cargo_design(289, 0, 0);
+    cargo_design(306, 0, 0);
+    cargo_design(323, 0, 0);
+
+    glPopMatrix();
+}
+
+void updatecargo(int value)
+{
+    cargoPosition3 += cargoSpeed3;
+    if ( cargoPosition3 < -1900.0f) {
+         cargoPosition3 = 1900.0f;
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updatecargo, 0);
+
+}
+
+void cargo_design(float a, float b, float c)
+{
+    glPushMatrix();
+    glTranslatef(a,b,c);
+
+    glBegin(GL_POLYGON);
+    glColor3ub(84, 124, 144);
+    glVertex2f(1526, 132);
+    glVertex2f(1539, 132);
+    glVertex2f(1539, 239);
+    glVertex2f(1526, 239);
+    glVertex2f(1526, 132);
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(29, 111, 150);
+    glVertex2f(1530, 135);
+    glVertex2f(1536, 134);
+    glVertex2f(1536, 235);
+    glVertex2f(1529, 235);
+    glVertex2f(1530, 135);
+
+    glEnd();
+
+    glPopMatrix();
+
+}
+
+void windowline(float a,float b,float c)
+{
+    glPushMatrix();
+    glTranslatef(a,b,c);
+    glColor3ub(37, 36, 28);
+    glBegin(GL_QUADS);
+    glVertex2f(330, 186);
+    glVertex2f(334, 186);
+    glVertex2f(334, 230);
+    glVertex2f(330, 230);
+
+
+    glEnd();
+    glPopMatrix();
+
+}
+
+void car1wheels(float x,float y,float z)
+{
+glPushMatrix();
+glTranslatef(x,y,z);
+
+glBegin(GL_POLYGON);
+	for(int i=0;i<200;i++)
+        {
+            glColor3ub(56, 59, 61);
+            float local_pi=3.1416;
+            float A=(i*2*local_pi)/200;
+            float r=32.35;
+            float cx = r * cos(A);
+            float cy = r * sin(A);
+            glVertex2f(cx + 1478, cy + 80);
+        }
+
+glEnd();
+
+glBegin(GL_POLYGON);
+	for(int i=0;i<200;i++)
+        {
+            glColor3ub(215,223,193);
+            float local_pi=3.1416;
+            float A=(i*2*local_pi)/200;
+            float r=21.43;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+1478,y+80);
+        }
+
+glEnd();
+
+
+glPopMatrix();
+}
+
+//Car
+void car7777777()
+{
+    if(!fogOn)
+    {
+
+    glPushMatrix();
+    glScalef(0.7f, 0.7f, 1.0f);
+    glTranslatef(car2_move,-50,0);
+
+    glTranslatef(0, 55, 0);
+    glTranslatef(1000, 0, 0);
+    glScalef(-1, 1, 1);
+    glTranslatef(-500, 0, 0);
+
+    glBegin(GL_POLYGON);     //carbody
+    glColor3ub(62, 74, 76);
+        glVertex2f(1445, 68);
+        glVertex2f(1417, 68);
+        glVertex2f(1412, 68);
+        glVertex2f(1407, 70);
+
+        glVertex2f(1404, 74);
+        glVertex2f(1401, 77);
+        glVertex2f(1399, 80);
+        glVertex2f(1397, 83);
+        glVertex2f(1395, 86);
+        glVertex2f(1394, 89);
+        glVertex2f(1394, 91);
+        glVertex2f(1394, 95);
+
+        glVertex2f(1394, 99);
+        glVertex2f(1395, 103);
+        glVertex2f(1397, 108);
+        glVertex2f(1399, 113);
+        glVertex2f(1403, 119);
+        glVertex2f(1407, 126);
+        glVertex2f(1412, 131);
+
+        glVertex2f(1498, 147);
+        glVertex2f(1502, 148);
+        glVertex2f(1532, 163);
+        glVertex2f(1559, 177);
+        glVertex2f(1564, 180);
+        glVertex2f(1568, 182);
+        glVertex2f(1574, 185);
+
+        glVertex2f(1582, 186);
+        glVertex2f(1661, 187);
+        glVertex2f(1675, 184);
+        glVertex2f(1690, 180);
+        glVertex2f(1697, 173);
+        glVertex2f(1749, 147);
+        glVertex2f(1755, 152);
+
+        glVertex2f(1782, 152);
+        glVertex2f(1788, 149);
+        glVertex2f(1792, 146);
+        glVertex2f(1794, 141);
+        glVertex2f(1793, 136);
+        glVertex2f(1794, 132);
+        glVertex2f(1792, 116);
+
+        glVertex2f(1795, 111);
+        glVertex2f(1797, 105);
+        glVertex2f(1798, 98);
+        glVertex2f(1798, 91);
+        glVertex2f(1797, 84);
+        glVertex2f(1793, 77);
+
+        glVertex2f(1787, 74);
+        glVertex2f(1777, 71);
+        glVertex2f(1765, 69);
+        glVertex2f(1750, 68);
+        glVertex2f(1445, 68);
+        glEnd();
+
+
+        glBegin(GL_POLYGON);     //car1window
+        glColor3ub(1,1,1);
+            glVertex2f(1498, 147);
+            glVertex2f(1499, 144);
+            glVertex2f(1502, 142);
+            glVertex2f(1511, 140);
+            glVertex2f(1520, 140);
+            glVertex2f(1574, 173);
+            glVertex2f(1567, 176);
+            glVertex2f(1559, 177);
+            glVertex2f(1532, 163);
+            glVertex2f(1502, 148);
+        glEnd();
+
+
+        glBegin(GL_POLYGON);     //car1window
+        glColor3ub(71, 79, 83);
+            glVertex2f(1502, 148);
+            glVertex2f(1501, 147);
+            glVertex2f(1500, 146);
+            glVertex2f(1502, 144);
+            glVertex2f(1506, 143);
+            glVertex2f(1510, 142);
+            glVertex2f(1516, 142);
+            glVertex2f(1520, 142);
+            glVertex2f(1570, 173);
+            glVertex2f(1556, 175);
+            glVertex2f(1532, 163);
+        glEnd();
+
+
+        glBegin(GL_POLYGON);     //car1window
+        glColor3ub(1,1,1);
+            glVertex2f(1524, 133);
+            glVertex2f(1535, 143);
+            glVertex2f(1547, 150);
+            glVertex2f(1560, 160);
+
+            glVertex2f(1569, 164);
+            glVertex2f(1581, 169);
+            glVertex2f(1595, 173);
+            glVertex2f(1602, 174);
+            glVertex2f(1656, 174);
+            glVertex2f(1669, 172);
+            glVertex2f(1682, 167);
+
+            glVertex2f(1693, 162);
+            glVertex2f(1704, 155);
+            glVertex2f(1708, 151);
+            glVertex2f(1702, 133);
+        glEnd();
+
+
+        glBegin(GL_POLYGON);     //car1window
+        glColor3ub(71, 79, 83);
+            glVertex2f(1529, 136);
+            glVertex2f(1536, 141);
+            glVertex2f(1548, 149);
+            glVertex2f(1561, 157);
+
+            glVertex2f(1570, 162);
+            glVertex2f(1582, 167);
+            glVertex2f(1588, 168);
+            glVertex2f(1617, 168);
+            glVertex2f(1617, 136);
+        glEnd();
+
+        glBegin(GL_POLYGON);     //car1window
+        glColor3ub(71, 79, 83);
+            glVertex2f(1623, 136.);
+            glVertex2f(1623, 168);
+            glVertex2f(1665, 168);
+            glVertex2f(1665, 136);
+        glEnd();
+
+        glBegin(GL_POLYGON);     //car1window
+        glColor3ub(71, 79, 83);
+            glVertex2f(1671, 168);
+            glVertex2f(1680, 164);
+            glVertex2f(1688, 159);
+            glVertex2f(1696, 155);
+
+            glVertex2f(1702, 150);
+            glVertex2f(1700, 136);
+            glVertex2f(1671, 136);
+        glEnd();
+
+        glBegin(GL_POLYGON);     //car1window
+        glColor3ub(71, 79, 83);
+            glVertex2f(1690, 180);
+            glVertex2f(1710, 172);
+            glVertex2f(1755, 152);
+            glVertex2f(1749, 147);
+            glVertex2f(1697, 173);
+            glVertex2f(1690, 180);
+        glEnd();
+
+        glBegin(GL_POLYGON);    //lights
+        glColor3ub(246, 241, 233);
+            glVertex2f(1397, 108);
+            glVertex2f(1399, 113);
+            glVertex2f(1403, 119);
+            glVertex2f(1409, 119);
+
+            glVertex2f(1408, 111);
+            glVertex2f(1403, 106);
+            glVertex2f(1399, 106);
+        glEnd();
+
+        glBegin(GL_POLYGON);    //lights
+        glColor3ub(246, 241, 233);
+            glVertex2f(1409, 119);
+            glVertex2f(1415, 121);
+            glVertex2f(1425, 122);
+            glVertex2f(1447, 123);
+
+            glVertex2f(1448, 119);
+            glVertex2f(1447, 115);
+            glVertex2f(1443, 113);
+            glVertex2f(1437, 111);
+            glVertex2f(1431, 111);
+            glVertex2f(1408, 111);
+        glEnd();
+
+        glBegin(GL_POLYGON);    //lights
+        glColor3ub(246, 33, 4);
+            glVertex2f(1769, 130);
+            glVertex2f(1776, 116);
+            glVertex2f(1792, 115);
+            glVertex2f(1794, 132);
+        glEnd();
+
+        glBegin(GL_POLYGON);
+        glColor3ub(0,0,0);
+            glVertex2f(1592, 125);
+            glVertex2f(1606, 125);
+            glVertex2f(1609, 123);
+            glVertex2f(1608,118);
+
+            glVertex2f(1593, 118);
+            glVertex2f(1591, 122);
+        glEnd();
+
+        glBegin(GL_POLYGON);
+        glColor3ub(0,0,0);
+            glVertex2f(1676, 118);
+            glVertex2f(1691, 118);
+            glVertex2f(1694, 124);
+            glVertex2f(1691, 125);
+
+            glVertex2f(1676, 125);
+            glVertex2f(1674, 124);
+            glVertex2f(1676, 118);
+        glEnd();
+
+        glLineWidth(1);
+
+        glBegin(GL_LINES);
+        glColor3ub(1,1,1);
+
+            glVertex2f(1620, 131);
+            glVertex2f(1620, 73);
+
+        glEnd();
+
+
+        car1wheels(0,0,0);
+        car1wheels(237.14,0,0);
+
+        glPopMatrix();
+    }
+
+}
+
+void updateCar777(int value)
+{
+    car2_move += car2_speed;
+
+    if (car2_move > 3000) {
+        car2_move = -500;
+    }
+
+    glutPostRedisplay();
+    glutTimerFunc(16, updateCar777, 0);
+}
+
+void drawFog();
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    sky();
+
+    Cloud2(cloud2,40,0);
+
+    // BACK MOUNTAINS
+    backgroundmountain();
+
+    //Birds
+    for(int i = 0; i < 4; i++)
+    {
+        drawBird(birdX[i], birdY[i]);
+    }
+
+    //Boat
+    boat27();
+
+    sun();
+
+    // CLOUDS (animated)
+    Cloud1(cloud1,0,0);
+
+    // FRONT MOUNTAINS
+    Mountain();
+
+    // LAND + RIVER
+    Land();
+    Land2();
+
+    // BRIDGE + STRUCTURE
+    Bridge();
+    bridge_structure(0,0,0);
+    pilar_Shadow();
+
+    // TREES
+    tree3(0,0,0);
+   tree3(-30,0,0);
+   tree3(60,0,0);
+   tree3(60,25,0);
+   tree3(120,0,0);
+   tree3(120,30,0);
+   tree3(180,0,0);
+   tree3(180,20,0);
+   tree3(240,0,0);
+   tree3(300,0,0);
+   tree3(360,0,0);
+   tree3(420,0,0);
+   tree3(480,0,0);
+   tree3(540,0,0);
+   tree3(600,0,0);
+   tree3(660,0,0);
+   tree3(720,0,0);
+   tree3(780,0,0);
+   tree3(840,0,0);
+   tree3(900,0,0);
+   tree3(960,0,0);
+   tree3(1020,0,0);
+   tree3(1080,0,0);
+   tree3(1120,0,0);
+
+   tree3detailing(0,0,0);
+   tree3detailing(3,-3,0);
+   tree3detailing(6,-6,0);
+   tree3detailing(50,0,0);
+   tree3detailing(50,-3,0);
+   tree3detailing(50,-6,0);
+   tree3detailing(50,-9,0);
+   tree3detailing(50,-12,0);
+   tree3detailing(100,0,0);
+   tree3detailing(100,-3,0);
+   tree3detailing(100,-6,0);
+   tree3detailing(150,0,0);
+   tree3detailing(150,-3,0);
+   tree3detailing(200,0,0);
+   tree3detailing(200,-3,0);
+   tree3detailing(200,-6,0);
+   tree3detailing(250,0,0);
+   tree3detailing(250,-3,0);
+   tree3detailing(250,-6,0);
+   tree3detailing(250,-9,0);
+   tree3detailing(300,0,0);
+   tree3detailing(300,-3,0);
+   tree3detailing(300,-6,0);
+   tree3detailing(350,0,0);
+   tree3detailing(350,-3,0);
+   tree3detailing(350,-6,0);
+   tree3detailing(400,0,0);
+   tree3detailing(400,-3,0);
+   tree3detailing(400,-6,0);
+   tree3detailing(400,-9,0);
+   tree3detailing(400,3,0);
+   tree3detailing(450,0,0);
+   tree3detailing(450,-3,0);
+   tree3detailing(450,-6,0);
+   tree3detailing(500,0,0);
+   tree3detailing(500,-3,0);
+   tree3detailing(500,-6,0);
+   tree3detailing(500,-9,0);
+   tree3detailing(500,-12,0);
+   tree3detailing(550,0,0);
+   tree3detailing(550,3,0);
+   tree3detailing(550,-3,0);
+   tree3detailing(550,-6,0);
+   tree3detailing(550,-9,0);
+   tree3detailing(550,-12,0);
+   tree3detailing(550,-15,0);
+   tree3detailing(600,0,0);
+   tree3detailing(600,-3,0);
+   tree3detailing(600, -6, 0);
+    tree3detailing(650, 0, 0);
+    tree3detailing(650, -3, 0);
+    tree3detailing(650, -6, 0);
+    tree3detailing(700, 0, 0);
+    tree3detailing(700, -3, 0);
+    tree3detailing(700, -9, 0);
+    tree3detailing(750, 0, 0);
+    tree3detailing(750, -3, 0);
+    tree3detailing(750, -6, 0);
+    tree3detailing(800, 0, 0);
+    tree3detailing(800, -3, 0);
+    tree3detailing(800, -6, 0);
+    tree3detailing(800, -9, 0);
+    tree3detailing(850, 0, 0);
+    tree3detailing(850, -3, 0);
+    tree3detailing(850, -6, 0);
+    tree3detailing(850, -9, 0);
+    tree3detailing(850, -12, 0);
+    tree3detailing(900, 0, 0);
+    tree3detailing(900, -3, 0);
+    tree3detailing(900, -6, 0);
+    tree3detailing(900, -9, 0);
+    tree3detailing(950, 0, 0);
+    tree3detailing(950, -3, 0);
+    tree3detailing(950, -6, 0);
+    tree3detailing(1000, 0, 0);
+    tree3detailing(1000, -3, 0);
+    tree3detailing(1000, -6, 0);
+    tree3detailing(1000, -9, 0);
+    tree3detailing(1050, 0, 0);
+    tree3detailing(1050, -3, 0);
+    tree3detailing(1050, -6, 0);
+    tree3detailing(1050, -9, 0);
+    tree3detailing(1050, -12, 0);
+    tree3detailing(1100, 0, 0);
+    tree3detailing(1100, -3, 0);
+    tree3detailing(1100, -6, 0);
+    tree3detailing(1150, 0, 0);
+    tree3detailing(1150, 3, 0);
+    tree3detailing(1150, -3, 0);
+    tree3detailing(1200, 0, 0);
+    tree3detailing(1250, 0, 0);
+
+   Trees(0,0,0);
+   Trees(50,0,0);
+   Trees(-50,0,0);
+   Trees(-100,0,0);
+
+   Trees(-200,0,0);
+   Trees(-200,-100,0);
+   Trees(200,20,0);
+   Trees(-300,0,0);
+   Trees(-300,100,0);
+
+    Trees(-300,150,0);
+    Trees(-150,150,0);
+    Trees(-150,180,0);
+    Trees(-150,210,0);
+    Trees(-150,260,0);
+    Trees(-300,300,0);
+    Trees(-250,370,0);
+
+    tree2(0,0,0,1,1,1);
+    tree2(30,-240,0,1,1,1);
+    tree2(200,-200,0,1,1,1);
+    tree2(350,-200,0,1,1,1);
+    tree2(320,-100,0,1,1,1);
+
+    tree2(150,300,0,0.7,0.7,1);
+    tree2(200,300,0,0.7,0.7,1);
+    tree2(250,400,0,0.6,0.6,1);
+    tree2(300,500,0,0.5,0.5,1);
+    tree2(250,250,0,0.7,0.7,1);
+    tree2(320,250,0,0.7,0.7,1);
+    tree2(250,200,0,0.7,0.7,1);
+    tree2(350,200,0,0.7,0.7,1);
+
+    pilar_Shadow();
+    river();
+
+    Land2();
+
+    // LEFT TREES
+    Left_tree(0,100,0);
+    Left_tree(100,120,0);
+    Left_tree(100,200,0);
+    Left_tree(100,280,0);
+    Left_tree(-1700,30,0);
+
+    Bridge();
+    bridge_structure(0,0,0);
+    bridge_structure(640,0,0);
+    bridge_structure(1280,0,0);
+
+    BackFlower(0,400,0);
+    BackFlower(100,500,0);
+    BackFlower(-70,480,0);
+    BackFlower(250,280,0);
+    BackFlower(280,290,0);
+    BackFlower(20,250,0);
+    BackFlower(210,600,0);
+
+    Train();
+
+    left_tree2(-1100,-110,0);
+    left_tree2(-1300,-100,0);
+    left_tree2(-1200,-105,0);
+    left_tree2(150,-90,0);
+    left_tree2(200,-90,0);
+    left_tree2(300,-100,0);
+    left_tree2(400,-110,0);
+    left_tree2(480,-110,0);
+    left_tree2(50,-105,0);
+
+    road();
+    road_piller(0,0,0);
+    road_piller(25,0,0);
+    road_piller(50,0,0);
+    road_piller(75,0,0);
+    road_piller(100,0,0);
+
+    road_piller(125,0,0);
+    road_piller(150,0,0);
+    road_piller(175,0,0);
+    road_piller(200,0,0);
+    road_piller(225,0,0);
+    road_piller(250,0,0);
+    road_piller(275,0,0);
+    road_piller(300,0,0);
+    road_piller(325,0,0);
+    road_piller(350,0,0);
+    road_piller(375,0,0);
+    road_piller(400,0,0);
+    road_piller(425,0,0);
+    road_piller(450,0,0);
+    road_piller(475,0,0);
+    road_piller(500,0,0);
+    road_piller(525,0,0);
+    road_piller(550,0,0);
+    road_piller(575,0,0);
+    road_piller(600,0,0);
+    road_piller(625,0,0);
+    road_piller(650,0,0);
+    road_piller(675,0,0);
+    road_piller(700,0,0);
+    road_piller(725,0,0);
+    road_piller(750,0,0);
+    road_piller(775,0,0);
+    road_piller(800,0,0);
+    road_piller(825,0,0);
+    road_piller(850, 0, 0);
+    road_piller(875, 0, 0);
+    road_piller(900, 0, 0);
+    road_piller(925, 0, 0);
+    road_piller(950, 0, 0);
+    road_piller(975, 0, 0);
+    road_piller(1000, 0, 0);
+    road_piller(1025, 0, 0);
+    road_piller(1050, 0, 0);
+    road_piller(1075, 0, 0);
+    road_piller(1100, 0, 0);
+    road_piller(1125, 0, 0);
+    road_piller(1150, 0, 0);
+    road_piller(1175, 0, 0);
+    road_piller(1200, 0, 0);
+    road_piller(1225, 0, 0);
+    road_piller(1250, 0, 0);
+    road_piller(1275, 0, 0);
+    road_piller(1300, 0, 0);
+    road_piller(1325, 0, 0);
+    road_piller(1350, 0, 0);
+    road_piller(1375, 0, 0);
+    road_piller(1400, 0, 0);
+    road_piller(1425, 0, 0);
+    road_piller(1450, 0, 0);
+    road_piller(1475, 0, 0);
+    road_piller(1500, 0, 0);
+    road_piller(1525, 0, 0);
+    road_piller(1550, 0, 0);
+    road_piller(1575, 0, 0);
+    road_piller(1600, 0, 0);
+    road_piller(1625, 0, 0);
+    road_piller(1650, 0, 0);
+    road_piller(1675, 0, 0);
+    road_piller(1700, 0, 0);
+    road_piller(1725, 0, 0);
+    road_piller(1750, 0, 0);
+    road_piller(1775, 0, 0);
+    road_piller(1800, 0, 0);
+    road_piller(1825, 0, 0);
+    road_piller(1850, 0, 0);
+    road_piller(1875, 0, 0);
+    road_piller(1900, 0, 0);
+
+    road_piller2(0,0,0);
+    road_piller2(100, 0, 0);
+    road_piller2(200, 0, 0);
+    road_piller2(300, 0, 0);
+    road_piller2(400, 0, 0);
+    road_piller2(500, 0, 0);
+    road_piller2(600, 0, 0);
+    road_piller2(700, 0, 0);
+    road_piller2(800, 0, 0);
+    road_piller2(900, 0, 0);
+    road_piller2(1000, 0, 0);
+    road_piller2(1100, 0, 0);
+    road_piller2(1200, 0, 0);
+    road_piller2(1300, 0, 0);
+    road_piller2(1400, 0, 0);
+    road_piller2(1500, 0, 0);
+    road_piller2(1600, 0, 0);
+    road_piller2(1700, 0, 0);
+    road_piller2(1800, 0, 0);
+    road_piller2(1880,0,0);
+
+    Left_tree(-1600,0,0);
+    Left_tree(0,0,0);
+
+    glColor3ub(180, 0, 0);
+    Flower(0,0,0);
+    Flower(-70,-20,0);
+    Flower(-130,10,0);
+
+    RightFlower(1700,110,0);
+    RightFlower(1600,80,0);
+    RightFlower(1570,75,0);
+    RightFlower(1585,60,0);
+    RightFlower(1530,15,0);
+
+    bus7();
+    cargo_Truck(cargoPosition3,20,0);
+    car7777777();
+
+    drawFog();
+
+    glFlush();
+}
+
+void drawFog()
+{
+    if (!fogOn) return;
+
+    glColor4f(0.90f, 0.92f, 0.95f, fogDensity * 0.75f);
+    glBegin(GL_QUADS);
+        glVertex2f(0,0);
+        glVertex2f(1900,0);
+        glVertex2f(1900,1000);
+        glVertex2f(0,1000);
+    glEnd();
+
+    //Down
+    float gndAlpha = fogDensity * 0.15f;
+    glColor4f(0.93f, 0.94f, 0.97f, gndAlpha);
+    glBegin(GL_QUADS);
+        glVertex2f(0,0);
+        glVertex2f(1900,0);
+        glVertex2f(1900,280);
+        glVertex2f(0,280);
+    glEnd();
+
+    float riverAlpha = fogDensity * 0.73f;
+    glColor4f(0.88f, 0.90f, 0.94f, riverAlpha);
+    glBegin(GL_QUADS);
+        glVertex2f(0,280);
+        glVertex2f(1900,280);
+        glVertex2f(1900,650);
+        glVertex2f(0,650);
+    glEnd();
+
+    // ---- Layer 4: Sky haze (top portion fades into grey-white) ----
+    float skyAlpha = fogDensity * 1.25f;
+    glColor4f(0.88f, 0.90f, 0.94f, skyAlpha);
+    glBegin(GL_QUADS);
+        glVertex2f(0,650);
+        glVertex2f(1900,650);
+        glVertex2f(1900,1000);
+        glVertex2f(0,1000);
+    glEnd();
+}
+
+void handleKeypress(unsigned char key, int x, int y)
+{
+    if (key == 'f' || key == 'F') {
+        fogOn = !fogOn;
+        glutPostRedisplay();
+    }
+    // fog density controls
+    if (key == '+' && fogDensity < 0.9f) {
+        fogDensity += 0.05f;
+        glutPostRedisplay();
+    }
+    if (key == '-' && fogDensity > 0.1f) {
+        fogDensity -= 0.05f;
+        glutPostRedisplay();
+    }
+
+    switch(key)
+    {
+        // Train control
+        case 't':
+            train_speed += 1.0f;
+            break;
+        case 'g':
+            train_speed -= 1.0f;
+            break;
+        case 's':
+            train_speed = 0.0f;
+            break;
+        case 'r':
+            train_speed = 7.0f;
+            break;
+    }
+
+    switch(key)
+    {
+        //Car control
+        case 'c':
+            car2_speed += 1.0f;
+            break;
+        case 'v':
+            car2_speed -= 1.0f;
+            break;
+        case 'b':
+            car2_speed = 0.0f;
+            break;
+        case 'a':
+            car2_speed = 6.0f;
+            break;
+    }
+}
+
+void handleMouse(int button, int state, int x, int y)
+{
+    if(button == GLUT_LEFT_BUTTON)
+    {
+        boatSpeed2 += 0.1f;
+    }
+    if (button == GLUT_RIGHT_BUTTON)
+    {
+        boatSpeed2 -= 0.1f;
+    }
+    glutPostRedisplay();
+}
+
+
+void init()
+{
+    glClearColor(0.5, 0.8, 1.0, 1.0);
+
+    // Enable alpha blending globally (required for fog overlay)
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, 1900, 0, 1000);
+
+    glMatrixMode(GL_MODELVIEW);
+}
+
+int main(int argc, char** argv)
+{
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
+    glutInitWindowSize(1200, 700);
+    glutCreateWindow("Full City Scene with Train");
+
+    init();
+
+    glutDisplayFunc(display);
+    glutKeyboardFunc(handleKeypress);
+    glutMouseFunc(handleMouse);
+
+    // Existing animations
+    glutTimerFunc(0, train_update, 0);
+
+    glutTimerFunc(0, updateboat2, 0);
+
+    glutTimerFunc(0, updateCloud, 0);
+
+    glutTimerFunc(0, updateBridgeLight, 0);
+
+     // Start animations
+    glutTimerFunc(0, updateBus, 0);
+    glutTimerFunc(0, updatecargo, 0);
+    glutTimerFunc(16, updateCar777, 0);
+
+    glutTimerFunc(16, updateWave, 0);
+
+    glutTimerFunc(16, updateBird, 0);
+
+    glutMainLoop();
+    return 0;
+}
